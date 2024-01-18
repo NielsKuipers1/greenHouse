@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
+import sensor_interface
 
 PREDICTION_THRESHOLD = 0.75
 
@@ -9,14 +10,17 @@ CENTERING_THRESHOLD = 50
 # Load the trained model
 model = load_model('tomato_model.h5')
 
+frame_center_x = 0
+frame_center_y = 0
 
-def calculate_distance_to_center(x, y, w, h):
+
+def calculate_distance_to_center(x, y, w, h, frame_shape):
     # Calculate the center of the bounding box
     box_center_x = x + w // 2
     box_center_y = y + h // 2
 
     # Calculate the distance from the center of the frame
-    distance_to_center = np.sqrt((box_center_x - frame_center_x)**2 + (box_center_y - frame_center_y)**2)
+    distance_to_center = np.sqrt((box_center_x - frame_shape[1])**2 + (box_center_y - frame_shape[2])**2)
 
     return distance_to_center
 
@@ -52,7 +56,7 @@ def detect_ripe_tomatoes(frame, model):
                 continue
 
             # Add this tomatoes location data to the list
-            distance_list.append((x, y, w, h, calculate_distance_to_center(x, y, w, h)))
+            distance_list.append((x, y, w, h, calculate_distance_to_center(x, y, w, h, frame.shape)))
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
             # Extract the tomato from the frame and resize it to the size the model expects
@@ -86,35 +90,33 @@ def detect_ripe_tomatoes(frame, model):
     return distance_list
 
 
-# Open a connection to the webcam (camera index 0 by default)
-cap = cv2.VideoCapture(0)
+def start_demo():
+    # Open a connection to the webcam (camera index 0 by default)
+    cap = cv2.VideoCapture(0)
 
-frame_center_x = frame_center_y = 0
+    while True:
+        # Capture frame-by-frame
+        ret, frame = cap.read()
 
-while True:
-    # Capture frame-by-frame
-    ret, frame = cap.read()
+        # Check if the frame was captured successfully
+        if not ret:
+            print("Error: Couldn't read frame")
+            break
 
-    # Check if the frame was captured successfully
-    if not ret:
-        print("Error: Couldn't read frame")
-        break
-    if frame_center_x == 0 and frame_center_y == 0:
-        frame_center_x = frame.shape[1] // 2
-        frame_center_y = frame.shape[0] // 2
+        # Perform ripe tomato detection on the frame
+        # dist_list contains a list of tomatoes location data (x, y, w, h, dist_to_center)
+        # This list should contain everything necessary to make the gantry move
+        dist_list = detect_ripe_tomatoes(frame, model)
 
-    # Perform ripe tomato detection on the frame
-    # dist_list contains a list of tomatoes location data (x, y, w, h, dist_to_center)
-    # This list should contain everything necessary to make the gantry move
-    dist_list = detect_ripe_tomatoes(frame, model)
+        sensor_interface.load_to_json(dist_list)
 
-    for item in dist_list:
-        print(item)
+        # Break the loop if 'q' key is pressed
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-    # Break the loop if 'q' key is pressed
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    # Release the webcam and close all windows
+    cap.release()
+    cv2.destroyAllWindows()
 
-# Release the webcam and close all windows
-cap.release()
-cv2.destroyAllWindows()
+
+start_demo()
