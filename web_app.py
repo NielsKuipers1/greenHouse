@@ -18,14 +18,10 @@ class PlantApi(Resource):
         data = ps.get_plant_info(plant_id) 
 
         return {plant_id: data}
-    
+
 class AllPlants(Resource):
     def get(self):
         return {"plant1" : ps.get_plant_info(1), "plant2" : ps.get_plant_info(2), "plant3" : ps.get_plant_info(3)}
-    
-
-
-
 
 if __name__ == '__main__':
     api.add_resource(PlantApi, '/api/plant<int:plant_id>')

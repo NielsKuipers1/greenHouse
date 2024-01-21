@@ -61,11 +61,11 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
 
 <script>
 window.onload = function() {
-  httpGetAll = httpGetAllPlants(window.location.href + "/api/plants")
+  setInterval(updateAllPlants(window.location.href + "/api/plants"), 10000); //update every 10 seconds
 }
 
 
-function httpGetAllPlants(theUrl)
+function updageAllPlants(theUrl)
 {
     var plant_id = parseInt(theUrl.slice(-1));
     var xmlHttp = new XMLHttpRequest();
@@ -80,6 +80,7 @@ function httpGetAllPlants(theUrl)
 
     document.getElementById("plant3").innerHTML = "Soil humidity: " + response["plant3"]["humidity"]*100 + "%<br>" +
     "Temperature: " + response["plant3"]["temperature"] + "°C<br>" + "Light: " + response["plant3"]["light"] + " lux"
+
 
 }
 </script>
