@@ -25,17 +25,16 @@ def detect_red_tomatos(frame):
     eroded_mask = cv2.erode(blurred_mask,erode_element)
     dilated_mask = cv2.dilate(eroded_mask,dilate_element)
 
-    cv2.imshow(" ", dilated_mask)
 
     # on the color-masked, blurred and morphed image apply the cv2.HoughCircles-method to detect circle-shaped objects 
     detected_circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1, 150, param1=100, param2=20, minRadius=20, maxRadius=200)
     if detected_circles is not None:
         for circle in detected_circles[0, :]:
             circled_orig = cv2.circle(frame, [int(circle[0]), int(circle[1])], int(circle[2]), (0,255,0),thickness=3)
-        #cv2.imshow("original", circled_orig)
+        cv2.imshow("original", circled_orig)
     else:
         pass
-        #cv2.imshow("original", frame)
+        cv2.imshow("original", frame)
 
 def demo_run():
 
