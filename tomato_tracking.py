@@ -1,4 +1,5 @@
 import cv2
+import time
 
 def detect_red_tomatos(frame):
 
@@ -28,15 +29,19 @@ def detect_red_tomatos(frame):
 
     # on the color-masked, blurred and morphed image apply the cv2.HoughCircles-method to detect circle-shaped objects 
     detected_circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1, 150, param1=100, param2=20, minRadius=20, maxRadius=200)
+    centers = []
     if detected_circles is not None:
         for circle in detected_circles[0, :]:
             circled_orig = cv2.circle(frame, [int(circle[0]), int(circle[1])], int(circle[2]), (0,255,0),thickness=3)
+            centers.append(circle[2])
         cv2.imshow("original", circled_orig)
     else:
         pass
         cv2.imshow("original", frame)
+    return centers
 
 def demo_run():
+    prev = 0
 
     cap = cv2.VideoCapture(0)
 
@@ -48,6 +53,9 @@ def demo_run():
             break
 
         detect_red_tomatos(frame)
+        print(time.time() - prev)
+        prev = time.time()
+
     
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
