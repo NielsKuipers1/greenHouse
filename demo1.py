@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 import sensor_interface
+import time
 
 PREDICTION_THRESHOLD = 0.75
 
@@ -94,6 +95,7 @@ def start_demo():
     # Open a connection to the webcam (camera index 0 by default)
     cap = cv2.VideoCapture(0)
 
+    last = 0
     while True:
         # Capture frame-by-frame
         ret, frame = cap.read()
@@ -108,7 +110,8 @@ def start_demo():
         # This list should contain everything necessary to make the gantry move
         dist_list = detect_ripe_tomatoes(frame, model)
 
-        sensor_interface.load_to_json(dist_list)
+        print(time.time() - last)
+        last = time.time()
 
         # Break the loop if 'q' key is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
