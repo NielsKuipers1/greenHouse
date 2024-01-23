@@ -61,11 +61,11 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
 
 <script>
 window.onload = function() {
-  setInterval(updateAllPlants(window.location.href + "/api/plants"), 10000); //update every 10 seconds
+  setInterval(function() { updateAllPlants(window.location.href + "/api/plants")}, 10000); //update every 10 seconds
 }
 
 
-function updageAllPlants(theUrl)
+function updateAllPlants(theUrl)
 {
     var plant_id = parseInt(theUrl.slice(-1));
     var xmlHttp = new XMLHttpRequest();

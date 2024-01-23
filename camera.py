@@ -1,7 +1,48 @@
 import cv2
-
-from time import time
+import threading
+import queue
 from math import sqrt
+
+class CameraReader(threading.Thread):
+    def __init__(self, src=0):
+        super(CameraReader, self).__init__()
+        self.cap = cv2.VideoCapture(src)
+        self.queue = queue.Queue()
+        daemon = True
+        self.start()
+
+    def run(self):
+        while True:
+            ret, frame = self.cap.read()
+            if not ret:
+                print("ERROR: couldn't read a frame\n")
+                break
+            if not self.queue.empty():
+                try:
+                    self.queue.get_nowait()   # discard previous (unprocessed) frame
+                except queue.Empty:
+                    pass
+            self.queue.put(frame)
+
+    def read(self):
+        # return last frame, if empty - blocks until frame is available
+        return self.queue.get()
+    
+    def detect_red_circles(self, frame, show=False):
+        """
+        detects red circles in the frame and returns a list of centers of circles
+        """
+        (h, w) = frame.shape[:2] # height and width of the image
+        circles = detect_red_tomatos(frame)
+        remove_false_circles(circles)
+        if show:
+            if circles != []:
+                for circle in circles:
+                    circled = cv2.circle(frame, [int(circle[0]), int(circle[1])], int(circle[2]), (0,255,0),thickness=2)
+                cv2.imshow("original", circled)
+            else:
+                cv2.imshow("original", frame)
+        return [(circle[0], circle[1]) for c in circles]
 
 def detect_red_tomatos(frame):
 
@@ -65,33 +106,4 @@ def remove_false_circles(circles: list):
     c = 0
     for i in to_remove:
         circles.pop(i-c)
-        c+=1
-
-def demo_run():
-
-    cap = cv2.VideoCapture(0)
-
-    while(True):
-        ret, frame = cap.read()
-        (h, w) = frame.shape[:2] # height and width of the image
-        if not ret:
-            print("Error: Couldn't read frame")
-            break
-        
-
-        circles = detect_red_tomatos(frame)
-        remove_false_circles(circles)
-
-        if circles != []:
-            for circle in circles:
-                circled = cv2.circle(frame, [int(circle[0]), int(circle[1])], int(circle[2]), (0,255,0),thickness=2)
-            cv2.imshow("original", circled)
-        else:
-            cv2.imshow("original", frame)
-        
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    cap.release()
-    cv2.destroyAllWindows()
-
-demo_run()
+        c+=1    
