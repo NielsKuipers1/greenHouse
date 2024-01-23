@@ -8,7 +8,7 @@ class CameraReader(threading.Thread):
         super(CameraReader, self).__init__()
         self.cap = cv2.VideoCapture(src)
         self.queue = queue.Queue()
-        daemon = True
+        self.daemon = True
         self.start()
 
     def run(self):

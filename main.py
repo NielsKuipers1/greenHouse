@@ -23,7 +23,7 @@ if __name__ == "__main__":
     m = Main()
     # start a thread with web app
     threading.Thread(target=web_app.run_app, daemon=True).start()
-    schedule.every(60).seconds.do(pic_testing, m)
+    schedule.every(20).seconds.do(pic_testing, m)
     while True:
         schedule.run_pending()
         time.sleep(1)
