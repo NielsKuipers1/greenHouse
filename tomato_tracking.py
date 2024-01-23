@@ -33,8 +33,9 @@ def detect_red_tomatos(frame):
 
 
     # on the color-masked, blurred and morphed image apply the cv2.HoughCircles-method to detect circle-shaped objects 
-    # min_dist may be too small and can result in false 'inner' circles being detected. Makind it bigger will prevent it from detecting a bunch of tomatoes close to each other separately.
-    detected_circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1, minDist=20, param1=100, param2=20, minRadius=20, maxRadius=200)
+    # min_dist may be too small and can result in false 'inner' circles being detected. Makind it bigger will prevent 
+    # it from detecting a bunch of tomatoes close to each other individually.
+    detected_circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1, minDist=20, param1=100, param2=20, minRadius=20, maxRadius=150)
     circles = []
     if detected_circles is not None:
         for circle in detected_circles[0, :]:
@@ -48,7 +49,7 @@ def detect_red_tomatos(frame):
 
 def remove_false_circles(circles: list):
     """
-    removes small circles such that their center is inside a bigger circle
+    removes small circles with their center inside of a bigger circle
     """
     # sort corcles by radius 
     circles.sort(key=lambda x:[2])
