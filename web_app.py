@@ -26,4 +26,4 @@ class AllPlants(Resource):
 def run_app():
     api.add_resource(PlantApi, '/api/plant<int:plant_id>')
     api.add_resource(AllPlants, '/api/plants')
-    app.run()
+    app.run(host="0.0.0.0")

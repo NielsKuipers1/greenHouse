@@ -1,5 +1,4 @@
-import cv2 
-import json
+import cv2
 """
 temporary file to simulate sensor output
 """
