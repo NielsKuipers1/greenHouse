@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import numpy as np
 from RpiMotorLib import RpiMotorLib
+import keyboard
+import time
 
 WHEEL_DIAM = 0.011
 METERS_PER_ROTATION = WHEEL_DIAM*3.14
@@ -22,7 +24,8 @@ HEIGHT = 2.0
 motor_1 = RpiMotorLib.A4988Nema(DIR_1, STEP_1, (-1,-1,-1), "DRV8825")
 motor_2 = RpiMotorLib.A4988Nema(DIR_2, STEP_2, (-1,-1,-1), "DRV8825")
 
-pos = np.array([0.0,0.0])
+pos = np.array([0.0, 0.0])
+dest = np.array([0.0, 0.0])
 
 GPIO.setup(EN_PIN_1, GPIO.OUT)
 GPIO.setup(EN_PIN_2, GPIO.OUT)
@@ -62,7 +65,7 @@ def move(vec: np.ndarray):
 
     rot = convert_to_rotation(vec)
 
-    # try-except blocks because apparently convertion to int may fail at very low values
+    # try-except blocks needed because apparently convertion to int may fail at very low values
     try:
         steps_1 = int(200*rot[0])
     except ValueError:
@@ -77,3 +80,27 @@ def move(vec: np.ndarray):
     motor_1.motor_go(True if rot[0]>0 else False, steptype="Full", steps=steps_1)
     motor_2.motor_go(False if rot[1]>0 else True, steptype="Full", steps=steps_2)
     pos = end_point
+
+def control():
+    global dest, pos
+    vmax = np.vectorize(max)
+    vmin = np.vectorize(min)
+    vec = vmax(-0.15, vmin(0.15, dest-pos))
+    move(vec)
+    pos += vec
+
+if __name__ == "__main__":
+    # loop for testing using keyboard input
+    while True:
+        if keyboard.is_pressed('w'):
+            dest[1] += 0.05
+        elif keyboard.is_pressed('s'):
+            dest[1] -= 0.05
+        elif keyboard.is_pressed('a'):
+            dest[0] -= 0.05
+        elif keyboard.is_pressed('d'):
+            dest[0] += 0.05
+        time.sleep(0.5)
+        
+
+
