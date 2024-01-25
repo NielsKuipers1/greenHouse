@@ -17,15 +17,15 @@ STEP_2 = 0
 EN_PIN_2 = 0 # LOW to enable
 
 # TODO: measure actual width and height
-WIDTH = 1.0
-HEIGHT = 2.0
+WIDTH = 0.375
+HEIGHT = 0.39
+
+pos = np.array([0.0, 0.0])
+dest = np.array([0.0, 0.0])
 
 #setup and enable motors
 motor_1 = RpiMotorLib.A4988Nema(DIR_1, STEP_1, (-1,-1,-1), "DRV8825")
 motor_2 = RpiMotorLib.A4988Nema(DIR_2, STEP_2, (-1,-1,-1), "DRV8825")
-
-pos = np.array([0.0, 0.0])
-dest = np.array([0.0, 0.0])
 
 GPIO.setup(EN_PIN_1, GPIO.OUT)
 GPIO.setup(EN_PIN_2, GPIO.OUT)
@@ -100,6 +100,7 @@ if __name__ == "__main__":
             dest[0] -= 0.05
         elif keyboard.is_pressed('d'):
             dest[0] += 0.05
+        control()
         time.sleep(0.5)
         
 
