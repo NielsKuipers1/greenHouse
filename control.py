@@ -100,8 +100,11 @@ if __name__ == "__main__":
             dest[0] -= 0.05
         elif keyboard.is_pressed('d'):
             dest[0] += 0.05
+        elif keyboard.is_pressed('q'):
+            break
         control()
         time.sleep(0.5)
+    GPIO.cleanup()
         
 
 
