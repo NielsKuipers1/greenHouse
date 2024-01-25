@@ -1,3 +1,1 @@
-# Green House Module: Tomato tracking
-
-This is a fast implementation of the tomato tracking done with Machine Learning
+Merge of motor control into web_page with camera. motor contorl is not tested yet
