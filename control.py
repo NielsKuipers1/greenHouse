@@ -65,11 +65,11 @@ def _move(vec: np.ndarray):
     rot = _convert_to_rotation(vec)
     # try-except blocks needed because apparently convertion to int may fail at very low values
     try:
-        steps_1 = int(200*rot[0])
+        steps_1 = abs(int(200*rot[0]))
     except ValueError:
         steps_1 = 0
     try:
-        steps_2 = int(200*rot[1])
+        steps_2 = abs(int(200*rot[1]))
     except ValueError:
         steps_2 = 0 
 
