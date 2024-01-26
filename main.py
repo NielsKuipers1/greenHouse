@@ -22,8 +22,8 @@ class Main():
             if circles:
                 # take the biggest circle
                 to_follow = circles[len(circles)-1]
-                to_follow[0] = to_follow[0] if to_follow[0]>10 else 0
-                to_follow[1] = to_follow[1] if to_follow[1]>10 else 0
+                to_follow[0] = to_follow[0] if abs(to_follow[0])>10 else 0
+                to_follow[1] = to_follow[1] if abs(to_follow[1])>10 else 0
                 print(f"go {to_follow}")
                 # scale distance in pixels down to meters
                 ctr.move_dest_val(to_follow*0.001)
