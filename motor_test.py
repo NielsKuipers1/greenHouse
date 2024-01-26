@@ -39,19 +39,21 @@ GPIO.setup(EN_pin2,GPIO.OUT)
 #
 GPIO.output(EN_pin,GPIO.LOW) # pull enable to low to enable motor
 GPIO.output(EN_pin2,GPIO.LOW)
+dirr = False
 while (True):
-    mot2.motor_go(False, # True=Clockwise, False=Counter-Clockwise
+    mot2.motor_go(dirr, # True=Clockwise, False=Counter-Clockwise
                     "Full" , # Step type (Full,Half,1/4,1/8,1/16,1/32)
                     200, # number of steps
                     .0005, # step delay [sec]
                     False, # True = print verbose output 
                     .05) # initial delay [sec]
-    mymotortest.motor_go(False, # True=Clockwise, False=Counter-Clockwise
+    mymotortest.motor_go(dirr, # True=Clockwise, False=Counter-Clockwise
                         "Full" , # Step type (Full,Half,1/4,1/8,1/16,1/32)
                         200, # number of steps
                         .0005, # step delay [sec]
                         False, # True = print verbose output 
                         .05) # initial delay [sec]
+    dirr = not dirr
     time.sleep(1)
 
 GPIO.cleanup() # clear GPIO allocations after run
