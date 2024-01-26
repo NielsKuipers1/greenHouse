@@ -26,7 +26,7 @@ class Main():
                 to_follow[1] = to_follow[1] if abs(to_follow[1])>10 else 0
                 print(f"go {to_follow}")
                 # scale distance in pixels down to meters
-                ctr.move_dest_val(to_follow*0.001)
+                ctr.move_dest_val(to_follow*0.003)
                 # print(to_follow)
                 ctr.control()
 
