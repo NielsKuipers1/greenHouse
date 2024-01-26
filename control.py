@@ -12,9 +12,9 @@ DIR_1 = 22
 STEP_1 = 23
 EN_PIN_1 = 24 # LOW to enable
 # TODO: V
-DIR_2 = 0
-STEP_2 = 0
-EN_PIN_2 = 0 # LOW to enable
+DIR_2 = 25
+STEP_2 = 8
+EN_PIN_2 = 7 # LOW to enable
 
 WIDTH = 0.375
 HEIGHT = 0.39
