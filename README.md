@@ -18,4 +18,4 @@ I tested the code with one motor connecting it to both motor ports - it seems to
 - Too slow/fast movement: 
 
   line 29 in *main.py* scales movement down by multiplying by 0.003, you can try changing it. Lines 67-74 in *control.py* limit movement speed. You can try changing the limit.
-- 'ripped' movement: 'destination' updates every time a frame is checked, I don't think that can be done any faster other than by making a separate thread for motors. I personally think it is unnecessary.
+- 'ripped' movement: 'destination' updates every time a frame is checked, I don't think that can be done any faster other than by making a separate thread for motors. I personally think it is not unnecessary.
