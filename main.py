@@ -28,7 +28,7 @@ class Main():
                 # scale distance in pixels down to meters
                 ctr.move_dest_val(to_follow*0.003)
                 # print(to_follow)
-                ctr.control()
+            ctr.control()
 
 i = 1
 def pic_testing(m):
