@@ -63,7 +63,7 @@ def _move(vec: np.ndarray):
         vec[1] = -pos[1]
 
     rot = _convert_to_rotation(vec)
-
+    print(rot)
     # try-except blocks needed because apparently convertion to int may fail at very low values
     try:
         steps_1 = int(200*rot[0])
