@@ -1,7 +1,7 @@
 import cv2
 import threading
 import queue
-from math import sqrt
+import numpy as np
 
 class CameraReader(threading.Thread):
     def __init__(self, src=0):
@@ -28,13 +28,14 @@ class CameraReader(threading.Thread):
         # return last frame, if empty - blocks until frame is available
         return self.queue.get()
     
-    def detect_red_circles(self, frame, show=False):
+    def detect_red_tomatoes(self, frame, show=False) -> [np.ndarray]:
         """
-        detects red circles in the frame and returns a list of centers of circles
+        detects red circles in the frame and returns a list of distances from the center
         """
         (h, w) = frame.shape[:2] # height and width of the image
-        circles = detect_red_tomatos(frame)
-        remove_false_circles(circles)
+        frame_center = np.array([w/2, h/2])
+        circles = _detect_red_circles(frame)
+        _remove_false_circles(circles)
         if show:
             if circles != []:
                 for circle in circles:
@@ -42,9 +43,12 @@ class CameraReader(threading.Thread):
                 cv2.imshow("original", circled)
             else:
                 cv2.imshow("original", frame)
-        return [(circle[0], circle[1]) for c in circles]
+        return [np.array([c[0],h-c[1]]-frame_center) for c in circles]
 
-def detect_red_tomatos(frame):
+def _detect_red_circles(frame):
+    """
+    returns a list of circles [x, y, radius] of tomatoes
+    """
 
     blur = cv2.GaussianBlur(frame, (13,13), 0)
     hsv_conv_img = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
@@ -76,19 +80,17 @@ def detect_red_tomatos(frame):
     # on the color-masked, blurred and morphed image apply the cv2.HoughCircles-method to detect circle-shaped objects 
     # min_dist may be too small and can result in false 'inner' circles being detected. Makind it bigger will prevent 
     # it from detecting a bunch of tomatoes close to each other individually.
-    detected_circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1, minDist=20, param1=100, param2=20, minRadius=20, maxRadius=150)
+    detected_circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1, minDist=100, param1=100, param2=20, minRadius=20, maxRadius=150)
     circles = []
     if detected_circles is not None:
         for circle in detected_circles[0, :]:
             circled_orig = cv2.circle(frame, [int(circle[0]), int(circle[1])], int(circle[2]), (0,255,0),thickness=2)
             circles.append(circle)
-        #cv2.imshow("original", circled_orig)
     else:
         pass
-        #cv2.imshow("original", frame)
     return circles
 
-def remove_false_circles(circles: list):
+def _remove_false_circles(circles: list):
     """
     removes small circles with their center inside of a bigger circle
     """
@@ -100,7 +102,7 @@ def remove_false_circles(circles: list):
     for i in range(0, len(circles)-1):
         # check if center of this circle inside any other circle
         for j in range(i+1, len(circles)):
-            if (sqrt((circles[i][0]-circles[j][0])**2+(circles[i][1]-circles[j][1])**2) <= circles[j][2]):
+            if ((circles[i][0]-circles[j][0])**2+(circles[i][1]-circles[j][1])**2 <= circles[j][2]**2):
                 to_remove.add(i)
     # removve the circles
     c = 0
