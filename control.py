@@ -4,8 +4,6 @@ from RpiMotorLib import RpiMotorLib
 import keyboard
 import time
 
-import gantry_simulation as gs
-
 WHEEL_DIAM = 0.011
 METERS_PER_ROTATION = WHEEL_DIAM*3.14
 
@@ -100,9 +98,6 @@ def move_dest_val(vec):
 def test_with_keyboard():
     global dest, pos
     # loop for testing using keyboard input
-
-    G = gs.Gantry([[0,0], [0, HEIGHT], [WIDTH, HEIGHT], [WIDTH, 0]], pos)
-
     while True:
         print("loop")
         if keyboard.is_pressed('w'):
@@ -120,6 +115,5 @@ def test_with_keyboard():
         elif keyboard.is_pressed('q'):
             break
         control()
-        G.update(pos)
         time.sleep(0.1)
     GPIO.cleanup()

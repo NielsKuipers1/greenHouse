@@ -6,7 +6,6 @@ import schedule
 import time
 import control as ctr
 import numpy as np
-import gantry_simulation as gs
 
 class Main():
     def __init__(self):
@@ -17,7 +16,6 @@ class Main():
         imwrite(f"static/pic{plant_id}.jpg", frame)
 
     def test_control(self):
-        G = gs.Gantry([[0,0], [0, ctr.HEIGHT], [ctr.WIDTH, ctr.HEIGHT], [ctr.WIDTH, 0]], [0, 0])
         while True:
             # list of distances of circles to the center found by the camera, sorted by radius
             circles = self.cam.detect_red_tomatoes(self.cam.read(), True)
@@ -30,7 +28,6 @@ class Main():
                 ctr.move_dest_val(to_follow*0.001)
                 # print(to_follow)
                 ctr.control()
-            G.update(ctr.pos)
 
 i = 1
 def pic_testing(m):
