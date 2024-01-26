@@ -63,7 +63,6 @@ def _move(vec: np.ndarray):
         vec[1] = -pos[1]
 
     rot = _convert_to_rotation(vec)
-    print(f"rotate {rot}")
     # try-except blocks needed because apparently convertion to int may fail at very low values
     try:
         steps_1 = int(200*rot[0])
@@ -74,6 +73,8 @@ def _move(vec: np.ndarray):
     except ValueError:
         steps_2 = 0 
 
+    print(f"rotate {rot}")
+    print(f"dir = {True if rot[0]>0 else False}")
     motor_1.motor_go(True if rot[0]>0 else False, steptype="Full", steps=steps_1)
     motor_2.motor_go(False if rot[1]>0 else True, steptype="Full", steps=steps_2)
 
