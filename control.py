@@ -23,8 +23,8 @@ pos = np.array([0.0, 0.0])
 dest = np.array([0.0, 0.0])
 
 #setup and enable motors
-motor_1 = RpiMotorLib.A4988Nema(DIR_1, STEP_1, (-1,-1,-1), "DRV8825")
-motor_2 = RpiMotorLib.A4988Nema(DIR_2, STEP_2, (-1,-1,-1), "DRV8825")
+motor_1 = RpiMotorLib.A4988Nema(DIR_1, STEP_1, (21,21,21), "DRV8825")
+motor_2 = RpiMotorLib.A4988Nema(DIR_2, STEP_2, (21,21,21), "DRV8825")
 
 GPIO.setup(EN_PIN_1, GPIO.OUT)
 GPIO.setup(EN_PIN_2, GPIO.OUT)
