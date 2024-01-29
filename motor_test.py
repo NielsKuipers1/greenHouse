@@ -55,5 +55,4 @@ while (True):
                         .05) # initial delay [sec]
     dirr = not dirr
     time.sleep(1)
-    # a commment
 GPIO.cleanup() # clear GPIO allocations after run
