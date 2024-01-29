@@ -85,12 +85,13 @@ def control():
     global dest, pos
     vmax = np.vectorize(max)
     vmin = np.vectorize(min)
-    vec = vmax(-0.005, vmin(0.005, dest-pos))
+    vec = vmax(-0.5, vmin(0.5, dest-pos))
     _move(vec)
     pos += vec
 
 def move_dest_val(vec):
     global dest, pos
+    vec = np.array(vec)
     """
     change destination of the EE
     """

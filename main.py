@@ -33,8 +33,9 @@ class Main():
     def test_upright(self):
         i = 0
         while i < 20:
-            ctr.move_dest_val(np.array([0.1, 0.1]))
+            ctr.move_dest_val(np.array([1, 1]))
             ctr.control
+            time.sleep(0.2)
         ctr.motors_off()
 
 i = 1
