@@ -96,6 +96,12 @@ def move_dest_val(vec):
     """
     dest = pos+vec
 
+def motors_off():
+    motor_1.motor_stop()
+    motor_2.motor_stop()
+    time.sleep(0.5)
+    GPIO.cleanup()
+
 def test_with_keyboard():
     global dest, pos
     # loop for testing using keyboard input

@@ -26,9 +26,16 @@ class Main():
                 to_follow[1] = to_follow[1] if abs(to_follow[1])>10 else 0
                 print(f"go {to_follow}")
                 # scale distance in pixels down to meters
-                ctr.move_dest_val(to_follow*0.003)
+                ctr.move_dest_val(to_follow*0.03)
                 # print(to_follow)
             ctr.control()
+
+    def test_upright(self):
+        i = 0
+        while i < 20:
+            ctr.move_dest_val(0.1, 0.1)
+            ctr.control
+        ctr.motors_off()
 
 i = 1
 def pic_testing(m):
