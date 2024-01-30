@@ -63,7 +63,7 @@ class Main():
         move to the found tomato for 50 iterations
         # if tomato not found in 50 iterations - skip
         """
-        for _ in range(0, 50):
+        for _ in range(0, 100):
             centered = self.track_tomato()
             self.G.update(self.ctr.pos)
             if centered: break

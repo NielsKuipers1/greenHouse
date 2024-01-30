@@ -53,7 +53,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
     </div>
   </div>
  
-
+  <button type="button" onclick=checkPlants()>Check plants</button>
 
   <!-- Footer -->
 <!-- End page content -->
@@ -80,9 +80,12 @@ function updateAllPlants(theUrl)
 
     document.getElementById("plant3").innerHTML = "Soil humidity: " + response["plant3"]["humidity"]*100 + "%<br>" +
     "Temperature: " + response["plant3"]["temperature"] + "°C<br>" + "Light: " + response["plant3"]["light"] + " lux"
-
-
 }
+
+function checkPlants() {
+  
+}
+
 </script>
 
 
