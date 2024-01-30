@@ -100,7 +100,9 @@ class Controller:
         if DO_MOTORS:
             self.motor_1.motor_go(False if rot[0]>0 else True, steptype="Full", steps=steps_1)
             self.motor_2.motor_go(True if rot[1]>0 else False, steptype="Full", steps=steps_2)
-        
+            # wait for motors to turn
+        time.sleep(0.01)
+
 def convert_to_rotation(vec: np.ndarray) -> np.ndarray:
     """
     given change in XY coordinates returns rotations for motor 1 and 2

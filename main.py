@@ -65,6 +65,7 @@ class Main():
         """
         for _ in range(0, 50):
             centered = self.track_tomato()
+            self.G.update(self.ctr.pos)
             if centered: break
         
         self.take_picture(self.current_plant+1)
@@ -106,7 +107,7 @@ class Main():
             # take the biggest circle
             to_follow = circles[len(circles)-1]
             # if circle is close to cente rof the frame - return
-            if to_follow[0]<10 and to_follow[1]<10:
+            if abs(to_follow[0])<30 and abs(to_follow[1])<30:
                 return True
             # scale distance in pixels down
             self.ctr.move_dest_val(to_follow*0.001)
@@ -122,9 +123,9 @@ class Main():
             if self.state == GantryState.IDLE and self.stop: break
 
     def test_trigger_check(self):
-        time.sleep(3)
-        self.tringger_event()
         time.sleep(2)
+        self.tringger_event()
+        time.sleep(1)
         self.stop = True
         self.tringger_event()
 
