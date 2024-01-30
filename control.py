@@ -73,8 +73,6 @@ def _move(vec: np.ndarray):
     except ValueError:
         steps_2 = 0 
 
-    print(f"rotate {rot}")
-    print(f"dir = {True if rot[0]>0 else False}")
     motor_1.motor_go(False if rot[0]>0 else True, steptype="Full", steps=steps_1)
     motor_2.motor_go(True if rot[1]>0 else False, steptype="Full", steps=steps_2)
 
