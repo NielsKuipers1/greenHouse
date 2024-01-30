@@ -31,21 +31,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
   <!-- First Photo Grid-->
   <div class="w3-row-padding">
     <div class="w3-third w3-container w3-margin-bottom">
-      <img src="../static/pic1.jpg" style="width:100%" class="w3-hover-opacity">
+      <img id="img1" src="../static/pic1.jpg" style="width:100%" class="w3-hover-opacity">
       <div class="w3-container w3-white">
         <p><b>Plant 1</b></p>
         <p id="plant1"></p>
       </div>
     </div>
     <div class="w3-third w3-container w3-margin-bottom">
-      <img src="../static/pic2.jpg" style="width:100%" class="w3-hover-opacity">
+      <img id="img2" src="../static/pic2.jpg" style="width:100%" class="w3-hover-opacity">
       <div class="w3-container w3-white">
         <p><b>Plant 2</b></p>
         <p id="plant2"></p>
       </div>
     </div>
     <div class="w3-third w3-container">
-      <img src="../static/pic3.jpg"  style="width:100%" class="w3-hover-opacity">
+      <img id="img3" src="../static/pic3.jpg"  style="width:100%" class="w3-hover-opacity">
       <div class="w3-container w3-white">
         <p><b>Plant 3</b></p>
         <p id="plant3"></p>
@@ -53,7 +53,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
     </div>
   </div>
  
-  <button type="button" onclick=checkPlants()>Check plants</button>
+  <button type="button" onclick="checkPlants()">Check plants</button>
 
   <!-- Footer -->
 <!-- End page content -->
@@ -61,29 +61,36 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
 
 <script>
 window.onload = function() {
-  setInterval(function() { updateAllPlants(window.location.href + "/api/plants")}, 10000); //update every 10 seconds
+  setInterval(function() { updateAllPlants()}, 10000); //update every 10 seconds
 }
 
-
-function updateAllPlants(theUrl)
+function updateAllPlants()
 {
-    var plant_id = parseInt(theUrl.slice(-1));
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    var response = JSON.parse(xmlHttp.responseText);
-    document.getElementById("plant1").innerHTML = "Soil humidity: " + response["plant1"]["humidity"]*100 + "%<br>" +
-    "Temperature: " + response["plant1"]["temperature"] + "°C<br>" + "Light: " + response["plant1"]["light"] + " lux<br>"
+   var xmlHttp = new XMLHttpRequest();
+   xmlHttp.open( "GET", "/api/plants", false ); // false for synchronous request
+   xmlHttp.send( null );
+   var response = JSON.parse(xmlHttp.responseText);
+   document.getElementById("plant1").innerHTML = "Soil humidity: " + response["plant1"]["humidity"]*100 + "%<br>" +
+   "Temperature: " + response["plant1"]["temperature"] + "°C<br>" + "Light: " + response["plant1"]["light"] + " lux<br>"
 
-    document.getElementById("plant2").innerHTML = "Soil humidity: " + response["plant2"]["humidity"]*100 + "%<br>" +
-    "Temperature: " + response["plant2"]["temperature"] + "°C<br>" + "Light: " + response["plant1"]["light"] + " lux<br>"
+   document.getElementById("plant2").innerHTML = "Soil humidity: " + response["plant2"]["humidity"]*100 + "%<br>" +
+   "Temperature: " + response["plant2"]["temperature"] + "°C<br>" + "Light: " + response["plant1"]["light"] + " lux<br>"
 
-    document.getElementById("plant3").innerHTML = "Soil humidity: " + response["plant3"]["humidity"]*100 + "%<br>" +
-    "Temperature: " + response["plant3"]["temperature"] + "°C<br>" + "Light: " + response["plant3"]["light"] + " lux"
+   document.getElementById("plant3").innerHTML = "Soil humidity: " + response["plant3"]["humidity"]*100 + "%<br>" +
+   "Temperature: " + response["plant3"]["temperature"] + "°C<br>" + "Light: " + response["plant3"]["light"] + " lux"
 }
 
 function checkPlants() {
-  
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", "/api/camera", false)
+  xmlHttp.send(null)
+  setTimeout(updateImages, 3*60);
+}
+
+function updateImages() {
+  document.getElementById('img1').src = "../static/pic1.jpg";
+  document.getElementById('img2').src = "../static/pic1.jpg";
+  document.getElementById('img3').src = "../static/pic1.jpg";
 }
 
 </script>

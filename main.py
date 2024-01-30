@@ -1,10 +1,9 @@
 from camera import CameraReader
 from cv2 import imwrite
 from enum import Enum
+from web_app import WebApp
 
-import web_app
 import threading
-import schedule
 import time
 import control
 import numpy as np
@@ -88,13 +87,18 @@ class Main():
         self.ctr.set_dest(np.array([0.0,0.0]))
         self.ctr.control()
         if  np.array_equal(self.ctr.pos, self.ctr.dest):
+            self.event.clear()
             self.state = GantryState.IDLE
 
     def take_picture(self, plant_id):
         frame = self.cam.read()
         imwrite(f"static/pic{plant_id}.jpg", frame)
 
-    def tringger_event(self):
+    def tringger_camera(self):
+        self.event.set()
+
+    def exit(self):
+        self.stop = True
         self.event.set()
 
     def track_tomato(self) -> bool:
@@ -122,24 +126,20 @@ class Main():
             self.G.update(self.ctr.pos)
             if self.state == GantryState.IDLE and self.stop: break
 
-    def test_trigger_check(self):
+    def test_trigger_camera(self):
         time.sleep(2)
-        self.tringger_event()
+        self.tringger_camera()
         time.sleep(1)
         self.stop = True
-        self.tringger_event()
+        self.tringger_camera()
 
 
 if __name__ == "__main__":
     m = Main()
-
-    threading.Thread(target=m.test_trigger_check, daemon=True).start()
-    m.run()
-    
+    web_app = WebApp(m)
     # start a thread with web app
-    # threading.Thread(target=web_app.run_app, daemon=True).start()
-    # schedule.every(20).seconds.do(pic_testing, m)
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
-    
+    threading.Thread(target=web_app.run, daemon=True).start()
+    try:
+        m.run()
+    except KeyboardInterrupt:
+        m.exit()
