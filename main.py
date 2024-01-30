@@ -28,13 +28,15 @@ class Main():
                 # scale distance in pixels down to meters
                 ctr.move_dest_val(to_follow*0.03)
                 # print(to_follow)
+            else:
+                print("no red circles")
             ctr.control()
 
     def test_upright(self):
         i = 0
         while i < 20:
             ctr.move_dest_val(np.array([1, 1]))
-            ctr.control
+            ctr.control()
             time.sleep(0.2)
         ctr.motors_off()
 

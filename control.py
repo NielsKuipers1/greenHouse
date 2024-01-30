@@ -83,7 +83,7 @@ def control():
     global dest, pos
     vmax = np.vectorize(max)
     vmin = np.vectorize(min)
-    vec = vmax(-0.5, vmin(0.5, dest-pos))
+    vec = vmax(-0.05, vmin(0.05, dest-pos))
     _move(vec)
     pos += vec
 

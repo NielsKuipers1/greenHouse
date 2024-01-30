@@ -84,10 +84,7 @@ def _detect_red_circles(frame):
     circles = []
     if detected_circles is not None:
         for circle in detected_circles[0, :]:
-            circled_orig = cv2.circle(frame, [int(circle[0]), int(circle[1])], int(circle[2]), (0,255,0),thickness=2)
             circles.append(circle)
-    else:
-        pass
     return circles
 
 def _remove_false_circles(circles: list):
