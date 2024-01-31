@@ -1,16 +1,16 @@
+SHOW_CAMERA = False
+SHOW_GRAPH = False
+
 from camera import CameraReader
 from cv2 import imwrite
 from enum import Enum
 from web_app import WebApp
 
 import threading
-import time
 import control
 import numpy as np
-import gantry_simulation as gs
+if SHOW_GRAPH: import gantry_simulation as gs
 
-SHOW_CAMERA = False
-SHOW_GRAPH = False
 
 # coordinates of plants (made up, of course)
 PLANTS = [np.array([0.1, 0.13]), 
@@ -65,7 +65,7 @@ class Main():
         move to the found tomato for 50 iterations
         # if tomato not found in 50 iterations - skip
         """
-        for _ in range(0, 100):
+        for _ in range(0, 10):
             centered = self.track_tomato()
             if SHOW_GRAPH: self.G.update(self.ctr.pos)
             if centered: break
