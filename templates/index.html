@@ -63,6 +63,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
 window.onload = function() {
   setInterval(function() { updateAllPlants()}, 10000); //update every 10 seconds
   updateImages()
+  updateAllPlants()
 }
 
 function updateAllPlants()
@@ -85,7 +86,7 @@ function checkPlants() {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.open("GET", "/api/camera", false)
   xmlHttp.send(null)
-  setTimeout(updateImages, 3*60);
+  setInterval(function() {updateImages}, 5);
 }
 
 function updateImages() {

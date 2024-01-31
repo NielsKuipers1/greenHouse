@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask_restful import Api, Resource
 
-import plant_sensor_fake as ps
+import fake_humidity_sensor as ps
 
 class WebApp:
     def __init__(self, main):

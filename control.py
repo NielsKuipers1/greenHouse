@@ -1,6 +1,5 @@
 DO_MOTORS = False
 
-
 import numpy as np
 import keyboard
 import time
@@ -9,8 +8,8 @@ import time
 WHEEL_DIAM = 0.011
 METERS_PER_ROTATION = WHEEL_DIAM*3.14
 
-WIDTH = 0.375
-HEIGHT = 0.39
+WIDTH = 0.375 * 2.5
+HEIGHT = 0.39 * 2.5
 
 if DO_MOTORS:
     import RPi.GPIO as GPIO
@@ -85,14 +84,9 @@ class Controller:
         rot = convert_to_rotation(vec)
 
         # try-except blocks needed because apparently conversion to int may fail at very low values
-        try:
-            steps_1 = int(200*rot[0])
-        except ValueError:
-            steps_1 = 0
-        try:
-            steps_2 = int(200*rot[1])
-        except ValueError:
-            steps_2 = 0 
+
+        steps_1 = int(200*rot[0])
+        steps_2 = int(200*rot[1])
 
         # here I would turn the motors but they don't work :(
         if DO_MOTORS:

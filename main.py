@@ -1,11 +1,12 @@
-SHOW_CAMERA = False
-SHOW_GRAPH = False
+SHOW_CAMERA = True
+SHOW_GRAPH =  True
 
 from camera import CameraReader
 from cv2 import imwrite
 from enum import Enum
 from web_app import WebApp
 
+import time
 import threading
 import control
 import numpy as np
@@ -55,8 +56,8 @@ class Main():
     def handle_moving_to_plant(self):
         self.ctr.set_dest(PLANTS[self.current_plant])
         self.ctr.control()
-
-        if len(self.cam.detect_red_tomatoes(self.cam.read(), show=SHOW_CAMERA)) > 0 and self.ctr.close_to(PLANTS[self.current_plant]
+        tomatoes, _ = self.cam.detect_ripe_tomatoes(self.cam.read(), show=SHOW_CAMERA)
+        if len(tomatoes) > 0 and self.ctr.close_to(PLANTS[self.current_plant]
                                                                                         ) or np.array_equal(self.ctr.pos, self.ctr.dest):
             self.state = GantryState.TRACKING_TOMATO
 
@@ -65,12 +66,12 @@ class Main():
         move to the found tomato for 50 iterations
         # if tomato not found in 50 iterations - skip
         """
-        for _ in range(0, 10):
-            centered = self.track_tomato()
+        for _ in range(0, 150):
+            centered, frame = self.track_tomato()
             if SHOW_GRAPH: self.G.update(self.ctr.pos)
             if centered: break
         
-        self.take_picture(self.current_plant+1)
+        self.save_frame(frame, self.current_plant+1)
         if centered:
             print("Uno tomato")
             pass
@@ -81,6 +82,7 @@ class Main():
         # increment plant counter
         # if counter is at 0 - return to "base"
         self.current_plant = (self.current_plant+1)%3
+        time.sleep(0.8)
         if self.current_plant == 0:
             self.state = GantryState.RETURNING_TO_START
         else:
@@ -96,6 +98,9 @@ class Main():
     def take_picture(self, plant_id):
         frame = self.cam.read()
         imwrite(f"static/pic{plant_id}.jpg", frame)
+    
+    def save_frame(self, frame, plant_id):
+        imwrite(f"static/pic{plant_id}.jpg", frame)
 
     def tringger_camera(self):
         self.event.set()
@@ -109,20 +114,19 @@ class Main():
         tracks a tomato, returns true if tomato is close to center of the frame, false otherwise
         """
         # list of distances of circles to the center found by the camera, sorted by radius
-        circles = self.cam.detect_red_tomatoes(self.cam.read(), show=SHOW_CAMERA)
+        circles, frame = self.cam.detect_ripe_tomatoes(self.cam.read(), show=SHOW_CAMERA)
         if circles:
             # take the biggest circle
-            to_follow = circles[len(circles)-1]
+            to_follow = np.array(circles[len(circles)-1])
             # if circle is close to cente rof the frame - return
-            if abs(to_follow[0])<30 and abs(to_follow[1])<30:
-                return True
-            to_follow[0] = - to_follow[0]
+            if abs(to_follow[0])<70 and abs(to_follow[1])<70:
+                return True, frame
             # scale distance in pixels down
             self.ctr.move_dest_val(to_follow*0.0001)
             # print(to_follow)
             self.ctr.control()
             # regardless of whether or not position was updated in this iteration continue moving in previously set diraction 
-        return (len(circles) != 0)
+        return False, frame
 
     def run(self):
         while True:
