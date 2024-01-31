@@ -5,8 +5,6 @@ import numpy as np
 import keyboard
 import time
 
-import gantry_simulation as gs
-
 
 WHEEL_DIAM = 0.011
 METERS_PER_ROTATION = WHEEL_DIAM*3.14
@@ -108,29 +106,3 @@ def convert_to_rotation(vec: np.ndarray) -> np.ndarray:
     given change in XY coordinates returns rotations for motor 1 and 2
     """
     return [(vec[0]+vec[1])/METERS_PER_ROTATION, (vec[0]-vec[1])/METERS_PER_ROTATION]
-
-def test_with_keyboard():
-    global dest, pos
-    # loop for testing using keyboard input
-
-    G = gs.Gantry([[0,0], [0, HEIGHT], [WIDTH, HEIGHT], [WIDTH, 0]], pos)
-
-    while True:
-        print("loop")
-        if keyboard.is_pressed('w'):
-            dest[1] += 0.01
-            print("W")
-        elif keyboard.is_pressed('s'):
-            dest[1] -= 0.01
-            print("S")
-        elif keyboard.is_pressed('a'):
-            dest[0] -= 0.01
-            print("D")
-        elif keyboard.is_pressed('d'):
-            dest[0] += 0.01
-            print("D")
-        elif keyboard.is_pressed('q'):
-            break
-        control()
-        G.update(pos)
-        time.sleep(0.1)
