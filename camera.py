@@ -54,7 +54,7 @@ def _detect_red_circles(frame):
     hsv_conv_img = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
 
     # because hue wraps up and to extract as many "red objects" as possible, I define lower and upper boundaries for brighter and for darker red shades
-    bright_red_lower_bounds = (0, 100, 100)
+    bright_red_lower_bounds = (0, 170, 0)
     bright_red_upper_bounds = (10, 255, 255)
     bright_red_mask = cv2.inRange(hsv_conv_img, bright_red_lower_bounds, bright_red_upper_bounds)
 
@@ -70,24 +70,21 @@ def _detect_red_circles(frame):
 
     # some morphological operations (closing) to remove small blobs 
     erode_element = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
-    dilate_element = cv2.getStructuringElement(cv2.MORPH_RECT, (8, 8))
+    dilate_element = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
     eroded_mask = cv2.erode(blurred_mask,erode_element)
     dilated_mask = cv2.dilate(eroded_mask,dilate_element)
 
-    #frame = dilated_mask
+    frame = dilated_mask
 
 
     # on the color-masked, blurred and morphed image apply the cv2.HoughCircles-method to detect circle-shaped objects 
     # min_dist may be too small and can result in false 'inner' circles being detected. Makind it bigger will prevent 
     # it from detecting a bunch of tomatoes close to each other individually.
-    detected_circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1, minDist=100, param1=100, param2=20, minRadius=20, maxRadius=150)
+    detected_circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1, minDist=100, param1=100, param2=30, minRadius=20, maxRadius=150)
     circles = []
     if detected_circles is not None:
         for circle in detected_circles[0, :]:
-            circled_orig = cv2.circle(frame, [int(circle[0]), int(circle[1])], int(circle[2]), (0,255,0),thickness=2)
             circles.append(circle)
-    else:
-        pass
     return circles
 
 def _remove_false_circles(circles: list):

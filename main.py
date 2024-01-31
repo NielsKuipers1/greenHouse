@@ -9,6 +9,8 @@ import control
 import numpy as np
 import gantry_simulation as gs
 
+SHOW_CAMERA = True
+
 # coordinates of plants (made up, of course)
 PLANTS = [np.array([0.1, 0.13]), 
           np.array([0.275, 0.13]), 
@@ -53,7 +55,7 @@ class Main():
         self.ctr.set_dest(PLANTS[self.current_plant])
         self.ctr.control()
 
-        if len(self.cam.detect_red_tomatoes(self.cam.read(), show=True)) > 0 and self.ctr.close_to(PLANTS[self.current_plant]
+        if len(self.cam.detect_red_tomatoes(self.cam.read(), show=SHOW_CAMERA)) > 0 and self.ctr.close_to(PLANTS[self.current_plant]
                                                                                         ) or np.array_equal(self.ctr.pos, self.ctr.dest):
             self.state = GantryState.TRACKING_TOMATO
 
@@ -106,7 +108,7 @@ class Main():
         tracks a tomato, returns true if tomato is close to center of the frame, false otherwise
         """
         # list of distances of circles to the center found by the camera, sorted by radius
-        circles = self.cam.detect_red_tomatoes(self.cam.read(), show=True)
+        circles = self.cam.detect_red_tomatoes(self.cam.read(), show=SHOW_CAMERA)
         if circles:
             # take the biggest circle
             to_follow = circles[len(circles)-1]
@@ -126,20 +128,16 @@ class Main():
             self.G.update(self.ctr.pos)
             if self.state == GantryState.IDLE and self.stop: break
 
-    def test_trigger_camera(self):
-        time.sleep(2)
-        self.tringger_camera()
-        time.sleep(1)
-        self.stop = True
-        self.tringger_camera()
-
 
 if __name__ == "__main__":
     m = Main()
     web_app = WebApp(m)
     # start a thread with web app
+    
+    # this won't let you quit using Ctrl+C but shows camera output
     threading.Thread(target=web_app.run, daemon=True).start()
-    try:
-        m.run()
-    except KeyboardInterrupt:
-        m.exit()
+    m.run()
+
+    # this won't show camera output because it should be on main thread
+    # threading.Thread(target=m.run, daemon=True).start()
+    # web_app.run()
