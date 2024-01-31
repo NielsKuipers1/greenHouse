@@ -65,16 +65,16 @@ def _move(vec: np.ndarray):
     rot = _convert_to_rotation(vec)
     # try-except blocks needed because apparently convertion to int may fail at very low values
     try:
-        steps_1 = abs(int(200*rot[0]))
+        steps_1 = abs(int(300*rot[0]))
     except ValueError:
         steps_1 = 0
     try:
-        steps_2 = abs(int(200*rot[1]))
+        steps_2 = abs(int(300*rot[1]))
     except ValueError:
         steps_2 = 0 
 
-    motor_1.motor_go(False if rot[0]>0 else True, steptype="1/32", steps=steps_1)
-    motor_2.motor_go(True if rot[1]>0 else False, steptype="1/32", steps=steps_2)
+    motor_1.motor_go(False if rot[0]>0 else True, steptype="1/16", steps=steps_1)
+    motor_2.motor_go(True if rot[1]>0 else False, steptype="1/16", steps=steps_2)
 
 def control():
     """
