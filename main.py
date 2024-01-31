@@ -9,7 +9,8 @@ import control
 import numpy as np
 import gantry_simulation as gs
 
-SHOW_CAMERA = True
+SHOW_CAMERA = False
+SHOW_GRAPH = False
 
 # coordinates of plants (made up, of course)
 PLANTS = [np.array([0.1, 0.13]), 
@@ -26,7 +27,7 @@ class GantryState(Enum):
 
 class Main():
     def __init__(self):
-        self.G = gs.Gantry([[0,0], [0, control.HEIGHT], [control.WIDTH, control.HEIGHT], [control.WIDTH, 0]], [0, 0])
+        if SHOW_GRAPH: self.G = gs.Gantry([[0,0], [0, control.HEIGHT], [control.WIDTH, control.HEIGHT], [control.WIDTH, 0]], [0, 0])
         self.ctr = control.Controller()
         self.cam = CameraReader()
         self.current_plant = 0
@@ -66,7 +67,7 @@ class Main():
         """
         for _ in range(0, 100):
             centered = self.track_tomato()
-            self.G.update(self.ctr.pos)
+            if SHOW_GRAPH: self.G.update(self.ctr.pos)
             if centered: break
         
         self.take_picture(self.current_plant+1)
@@ -125,7 +126,7 @@ class Main():
     def run(self):
         while True:
             self.state_handler[self.state]()
-            self.G.update(self.ctr.pos)
+            if SHOW_GRAPH: self.G.update(self.ctr.pos)
             if self.state == GantryState.IDLE and self.stop: break
 
 
