@@ -73,8 +73,8 @@ def _move(vec: np.ndarray):
     except ValueError:
         steps_2 = 0 
 
-    motor_1.motor_go(False if rot[0]>0 else True, steptype="Full", steps=steps_1)
-    motor_2.motor_go(True if rot[1]>0 else False, steptype="Full", steps=steps_2)
+    motor_1.motor_go(False if rot[0]>0 else True, steptype="1/32", steps=steps_1)
+    motor_2.motor_go(True if rot[1]>0 else False, steptype="1/32", steps=steps_2)
 
 def control():
     """
