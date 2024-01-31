@@ -1,5 +1,5 @@
-SHOW_CAMERA = True
-SHOW_GRAPH =  True
+SHOW_CAMERA = False
+SHOW_GRAPH =  False
 
 from camera import CameraReader
 from cv2 import imwrite
@@ -57,8 +57,7 @@ class Main():
         self.ctr.set_dest(PLANTS[self.current_plant])
         self.ctr.control()
         tomatoes, _ = self.cam.detect_ripe_tomatoes(self.cam.read(), show=SHOW_CAMERA)
-        if len(tomatoes) > 0 and self.ctr.close_to(PLANTS[self.current_plant]
-                                                                                        ) or np.array_equal(self.ctr.pos, self.ctr.dest):
+        if len(tomatoes) > 0 and self.ctr.close_to(PLANTS[self.current_plant]) or np.array_equal(self.ctr.pos, self.ctr.dest):
             self.state = GantryState.TRACKING_TOMATO
 
     def handle_tracking_tomato(self):
@@ -66,7 +65,7 @@ class Main():
         move to the found tomato for 50 iterations
         # if tomato not found in 50 iterations - skip
         """
-        for _ in range(0, 150):
+        for _ in range(0, 100):
             centered, frame = self.track_tomato()
             if SHOW_GRAPH: self.G.update(self.ctr.pos)
             if centered: break
