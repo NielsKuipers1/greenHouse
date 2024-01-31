@@ -117,11 +117,11 @@ class Main():
             if abs(to_follow[0])<30 and abs(to_follow[1])<30:
                 return True
             # scale distance in pixels down
-            self.ctr.move_dest_val(to_follow*0.001)
+            self.ctr.move_dest_val(to_follow*0.0001)
             # print(to_follow)
             self.ctr.control()
             # regardless of whether or not position was updated in this iteration continue moving in previously set diraction 
-        return False
+        return (len(circles) != 0)
 
     def run(self):
         while True:
