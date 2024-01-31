@@ -13,9 +13,9 @@ if SHOW_GRAPH: import gantry_simulation as gs
 
 
 # coordinates of plants (made up, of course)
-PLANTS = [np.array([0.1, 0.13]), 
-          np.array([0.275, 0.13]), 
-          np.array([0.187, 0.26])]
+PLANTS = [np.array([control.WIDTH/3, control.HEIGHT/3]), 
+          np.array([control.WIDTH/1.5, control.HEIGHT/3]), 
+          np.array([control.WIDTH/2, control.HEIGHT/1.5])]
 
 
 class GantryState(Enum):
@@ -116,6 +116,7 @@ class Main():
             # if circle is close to cente rof the frame - return
             if abs(to_follow[0])<30 and abs(to_follow[1])<30:
                 return True
+            to_follow[0] = - to_follow[0]
             # scale distance in pixels down
             self.ctr.move_dest_val(to_follow*0.0001)
             # print(to_follow)
