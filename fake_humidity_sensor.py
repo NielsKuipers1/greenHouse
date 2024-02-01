@@ -3,4 +3,4 @@ temporary file to simulate sensor output
 """
 from random import uniform
 def get_plant_info(plant_id: int): 
-    return {"humidity": round(uniform(0.3, 0.8), 2), "temperature": 21.3, "light": 123}
+    return {"humidity": round(uniform(0.3, 0.8), 2)}
