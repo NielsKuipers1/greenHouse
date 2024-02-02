@@ -3,6 +3,7 @@
 An automatic greenhouse that can:  
 - Water the tomato plants
 - Detect ripe tomatoes
+- Show recent pictures of the plant of the web interface
 
 This is done by constructing a frame on which a 2d gantry is mounted to move a camera, this camera is controlled by a Raspberry pi.
 The irigation system allows for each plant to receive water when the average moisture (measured by the sensors) is below a threshold. 
